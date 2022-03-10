@@ -1,10 +1,15 @@
+# # OpenSearch Playground
+
+# ## Import packages
 from dotenv import dotenv_values
 from opensearchpy import OpenSearch, helpers
 from faker import Faker
 from faker.providers import internet, date_time
 
+# ## Load ENV
 config = dotenv_values()
 
+# ## Create OpenSearch client
 host = config.get('OPENSEARCH_HOST', 'localhost')
 port = config.get('OPENSEARCH_PORT', 9200)
 auth = (config.get('OPENSEARCH_USER', 'admin'), config.get('OPENSEARCH_PASSWORD', 'admin'))
@@ -19,6 +24,7 @@ client = OpenSearch(
 health = client.cat.health()
 print(health)
 
+# ## Define constants
 template_name = 'logs-hss'
 template_body = {
     'index_patterns': [
@@ -28,6 +34,7 @@ template_body = {
     'priority': 100
 }
 
+# ## Create index template and data stream
 create_index_template_result = client.indices.put_index_template(template_name, template_body)
 get_index_template_result = client.indices.get_index_template(template_name)
 print(get_index_template_result)
@@ -36,6 +43,7 @@ create_data_stream_result = client.indices.create_data_stream(template_name)
 get_data_stream_result = client.indices.get_data_stream(template_name)
 print(get_data_stream_result)
 
+# ## Ingest data
 fake = Faker()
 fake.add_provider(internet)
 fake.add_provider(date_time)
@@ -59,7 +67,10 @@ for _ in range(1_000):
 bulk_result = helpers.bulk(client=client, actions=logs)
 print(bulk_result)
 
+# ## Show data stream status
 data_stream_status_result = client.indices.data_streams_stats(name=template_name)
+print(data_stream_status_result)
 
+# ## Clean up
 client.indices.delete_index_template(template_name)
 client.indices.delete_data_stream(template_name)

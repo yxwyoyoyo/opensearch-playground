@@ -1,6 +1,8 @@
-# OpenSearch client
+# Use to form an OpenSearch client
 opensearch-py
-# Fake data generator
+# Use to generate fake data
 faker
-# Dotenv for environment variables
+# Use for environment variables
 python-dotenv
+# Use to generate jupyter notebook from python code
+p2j
