@@ -1,0 +1,4 @@
+# OpenSearch client
+opensearch-py
+# Fake data generator
+faker
