@@ -1,10 +1,13 @@
+from dotenv import dotenv_values
 from opensearchpy import OpenSearch, helpers
 from faker import Faker
 from faker.providers import internet, date_time
 
-host = 'localhost'
-port = 9200
-auth = ('admin', 'admin')
+config = dotenv_values()
+
+host = config.get('OPENSEARCH_HOST', 'localhost')
+port = config.get('OPENSEARCH_PORT', 9200)
+auth = (config.get('OPENSEARCH_USER', 'admin'), config.get('OPENSEARCH_PASSWORD', 'admin'))
 client = OpenSearch(
     hosts=[{'host': host, 'port': port}],
     http_compression=True,

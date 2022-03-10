@@ -2,3 +2,5 @@
 opensearch-py
 # Fake data generator
 faker
+# Dotenv for environment variables
+python-dotenv
