@@ -4,16 +4,15 @@
 from dotenv import dotenv_values
 from opensearchpy import OpenSearch, helpers
 import json
-import os
 import time
+import pytz
 from datetime import datetime
 from faker import Faker
 from faker.providers import internet, date_time
 
 # ## Load ENV
 config = dotenv_values()
-os.environ['TZ'] = 'Asia/Shanghai'
-time.tzset()
+cst = pytz.timezone('Asia/Shanghai')
 
 # ## Create OpenSearch client
 host = config.get('OPENSEARCH_HOST', 'localhost')
@@ -162,7 +161,7 @@ while True:
         'phone_number': fake.phone_number(),
         'email': fake.email(),
         'ip_address': fake.ipv4(),
-        '@timestamp': datetime.now(tz='Asia/Shanghai')
+        '@timestamp': cst.localize(datetime.now())
     }
     client.index(index=template_name, body=data)
     time.sleep(0.3)
